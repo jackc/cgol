@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Conway\'s Game of Life</string>
+    <string name="action_settings">Settings</string>
+</resources>
