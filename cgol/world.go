@@ -1,4 +1,4 @@
-package world
+package cgol
 
 type World struct {
 	cells  []bool
@@ -6,7 +6,7 @@ type World struct {
 	height int
 }
 
-func New(width, height int) *World {
+func NewWorld(width, height int) *World {
 	cells := make([]bool, width*height)
 	return &World{cells: cells, width: width, height: height}
 }
@@ -20,7 +20,7 @@ func (w *World) Height() int {
 }
 
 func (w *World) Step() *World {
-	w2 := New(w.width, w.height)
+	w2 := NewWorld(w.width, w.height)
 
 	for y := 0; y < w.Height(); y++ {
 		for x := 0; x < w.Width(); x++ {

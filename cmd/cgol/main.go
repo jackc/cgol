@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/jackc/cgol/world"
+	"github.com/jackc/cgol/cgol"
 	"github.com/nsf/termbox-go"
 )
 
@@ -21,7 +21,7 @@ var options struct {
 	seed      int
 }
 
-func Print(w *world.World, wr io.Writer) {
+func Print(w *cgol.World, wr io.Writer) {
 	deadCell := termbox.Cell{Ch: ' ', Fg: termbox.ColorBlack, Bg: termbox.ColorBlack}
 	liveCell := termbox.Cell{Ch: '🔶', Fg: termbox.ColorWhite, Bg: termbox.ColorBlack}
 
@@ -66,7 +66,7 @@ func main() {
 	}
 	defer termbox.Close()
 
-	w := world.New(options.width, options.height)
+	w := cgol.NewWorld(options.width, options.height)
 
 	for i := 0; i < options.cellCount; i++ {
 		w.Set(rand.Intn(w.Width()), rand.Intn(w.Height()), true)
