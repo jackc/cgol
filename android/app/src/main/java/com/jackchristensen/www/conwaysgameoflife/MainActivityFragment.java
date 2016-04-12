@@ -18,6 +18,7 @@ import go.cgol.Cgol;
 public class MainActivityFragment extends Fragment {
 
     private Cgol.World world;
+    private Handler handler = new Handler();
 
     public MainActivityFragment() {
     }
@@ -31,9 +32,8 @@ public class MainActivityFragment extends Fragment {
             int y = ThreadLocalRandom.current().nextInt(0, (int) world.Height());
             world.Set(x, y, true);
         }
-        render();
-        startTicker();
 
+        handler.postDelayed(runnable, 250);
     }
 
     @Override
@@ -59,14 +59,12 @@ public class MainActivityFragment extends Fragment {
         worldTextBox.setText(sb);
     }
 
-    private void startTicker() {
-        Handler handler = new Handler();
-            handler.postDelayed(new Runnable(){
-                @Override
-                public void run() {
-                    world.Step();
-                    render();
-                }
-            }, 250);
-    }
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            world = world.Step();
+            render();
+            handler.postDelayed(this, 250);
+        }
+    };
 }
