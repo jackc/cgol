@@ -1,7 +1,10 @@
 #include "stdafx.h"
 
 #include <iostream>
-#include<memory>
+#include <memory>
+#include <random>
+#include <chrono>
+#include <thread>
 #include <tclap/CmdLine.h>
 
 #include "cgol.h"
@@ -15,6 +18,7 @@ struct cliOptions {
 };
 
 std::unique_ptr<cliOptions> parseCLI(int argc, const char * argv[]);
+void render(world& w);
 
 int main(int argc, const char * argv[]) {
 	std::unique_ptr<cliOptions> cliOptions;
@@ -25,10 +29,27 @@ int main(int argc, const char * argv[]) {
 		std::cerr << "error parsing arguments";
 		return 1;
 	}
-	
+
 	world w(cliOptions->width, cliOptions->height);
-	std::cout << "Hello, World!\n";
-	std::cout << w.getWidth() << ", " << w.getHeight() << std::endl;
+
+	std::default_random_engine prng;
+	if (cliOptions->seed < 0) {
+		std::random_device r;
+		prng.seed(r());
+	} else {
+		prng.seed(cliOptions->seed);
+	}
+
+	for (int i = 0; i < cliOptions->liveCount; i++) {
+		w.set(prng(), prng(), true);
+	}
+
+	while (true) {
+		render(w);
+		w.step();
+		std::this_thread::sleep_for(std::chrono::milliseconds(cliOptions->stepTime));
+	}
+
 	return 0;
 }
 
@@ -40,7 +61,7 @@ std::unique_ptr<cliOptions> parseCLI(int argc, const char * argv[]) {
 	cmd.add(heightArg);
 	TCLAP::ValueArg<int> liveCountArg("", "livecount", "live cells to start", false, 100, "int");
 	cmd.add(liveCountArg);
-	TCLAP::ValueArg<int> stepTimeArg("", "steptime", "time per step in milliseconds", false, 250, "int");
+	TCLAP::ValueArg<int> stepTimeArg("", "steptime", "time per step in milliseconds", false, 1000, "int");
 	cmd.add(stepTimeArg);
 	TCLAP::ValueArg<int> seedArg("", "seed", "seed for PRNG", false, -1, "int");
 	cmd.add(seedArg);
@@ -55,4 +76,22 @@ std::unique_ptr<cliOptions> parseCLI(int argc, const char * argv[]) {
 	options->seed = seedArg.getValue();
 
 	return options;
+}
+
+void render(world& w) {
+	std::cout << string(80, '\n');
+
+	for (int y = 0; y < w.getHeight(); y++) {
+		for (int x = 0; x < w.getWidth(); x++) {
+			if (w.get(x, y)) {
+				std::cout << "*";
+			}
+			else {
+				std::cout << " ";
+			}
+		}
+		std::cout << "\n";
+	}
+
+	std::cout.flush();
 }
