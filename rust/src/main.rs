@@ -15,7 +15,7 @@ fn main() {
     };
     rustbox.present();
 
-    let mut world = World::new(16, 16);
+    let mut world = World::new(rustbox.width() as i16, rustbox.height() as i16);
     world.populate_rand(0.3);
 
     loop {
@@ -42,7 +42,7 @@ fn print_world(rustbox: &rustbox::RustBox, world: &World) {
         for x in 0..world.width() {
             let chr = if world.get(x, y) { '*' } else { ' ' };
             unsafe {
-                rustbox.change_cell(x as usize, y as usize, chr as u32, Color::White.as_16color(), Color::Black.as_16color());
+                rustbox.change_cell((x as usize) * 2, y as usize, chr as u32, Color::White.as_16color(), Color::Black.as_16color());
             }
         }
     }
