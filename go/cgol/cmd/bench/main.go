@@ -27,7 +27,7 @@ func main() {
 	flag.IntVar(&options.width, "width", 100, "width of world")
 	flag.IntVar(&options.height, "height", 100, "height of world")
 	flag.IntVar(&options.cellCount, "livecount", 100, "live cells to start")
-	flag.IntVar(&options.stepCount, "stepcount", 10_000, "number of steps to run")
+	flag.IntVar(&options.stepCount, "stepcount", 1_000, "number of steps to run")
 	flag.IntVar(&options.seed, "seed", -1, "seed")
 	flag.Parse()
 
@@ -46,5 +46,5 @@ func main() {
 	endTime := time.Now()
 
 	duration := endTime.Sub(startTime)
-	fmt.Println(duration.Seconds())
+	fmt.Println("Go:", duration.Seconds())
 }
